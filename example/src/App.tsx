@@ -19,7 +19,7 @@ export default function App() {
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={styles.container}>
           <PlacesAutocomplete
-            apiKey={''}
+            apiKey={'AIzaSyB1fAVk7Fu9TDYDrANqSqTsPegM_kHAqEA'}
             onSelect={onSelect}
             placeholder="Adresse..."
             minLength={2}

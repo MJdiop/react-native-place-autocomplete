@@ -84,13 +84,3 @@ android/generated
 
 # React Native Nitro Modules
 nitrogen/
-
-
-# src directory is used for development, but should not be committed to git
-src/
-
-#lib/modules
-lib/modules/
-
-#source maps
-*.map
