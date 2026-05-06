@@ -1,13 +1,17 @@
+
+
+
 # react-native-place-autocomplete
 
 lightweight React native google place autocomplete
 
-![](my_video.mov)
+## Demo
+
+https://github.com/user-attachments/assets/1ffb962e-9793-42a9-bd2e-65ea9904850e
 
 ## Installation
 
 ```sh
-npm install react-native-place-autocomplete
 yarn add react-native-place-autocomplete
 ```
 
