@@ -1,4 +1,9 @@
-import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  StyleProp,
+  TextInputProps,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export interface SelectedPlace {
   prediction: Prediction;
@@ -96,7 +101,7 @@ export const EXCLUDED_TYPES = [
   'parking',
 ];
 
-export interface PlacesAutocompleteProps {
+export interface PlacesAutocompleteProps extends TextInputProps {
   apiKey: string;
   onSelect: (place: SelectedPlace) => void;
   placeholder?: string;

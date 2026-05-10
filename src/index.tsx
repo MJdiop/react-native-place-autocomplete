@@ -12,118 +12,130 @@ import {
 
 import usePlacesAutocomplete from './usePlacesAutocomplete';
 import type { PlacesAutocompleteProps, Prediction } from './types';
+import { forwardRef } from 'react';
 
-export const PlacesAutocomplete = ({
-  apiKey,
-  onSelect,
-  placeholder,
-  minLength,
-  debounce,
-  containerStyle,
-  inputStyle,
-  listStyle,
-}: PlacesAutocompleteProps) => {
-  const {
-    query,
-    suggestions,
-    loading,
-    showList,
-    handleChangeText,
-    handleSelect,
-    handleClear,
-  } = usePlacesAutocomplete({ apiKey, minLength, debounce, onSelect });
+export const PlacesAutocomplete = forwardRef<
+  TextInput,
+  PlacesAutocompleteProps
+>(
+  (
+    {
+      apiKey,
+      onSelect,
+      placeholder,
+      minLength,
+      debounce,
+      containerStyle,
+      inputStyle,
+      listStyle,
+      ...res
+    },
+    ref
+  ) => {
+    const {
+      query,
+      suggestions,
+      loading,
+      showList,
+      handleChangeText,
+      handleSelect,
+      handleClear,
+    } = usePlacesAutocomplete({ apiKey, minLength, debounce, onSelect });
 
-  const highlightText = (text: string, highlight: string) => {
-    if (!highlight || !text) return <Text>{text}</Text>;
-    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-    return (
-      <Text>
-        {parts.map((part, i) =>
-          part.toLowerCase() === highlight.toLowerCase() ? (
-            <Text key={i} style={styles.highlighted}>
-              {part}
-            </Text>
-          ) : (
-            <Text key={i}>{part}</Text>
-          )
-        )}
-      </Text>
-    );
-  };
-
-  const renderItem = ({ item }: { item: Prediction }) => {
-    const mainText = item.structured_formatting?.main_text || '';
-    const secondaryText = item.structured_formatting?.secondary_text || '';
-    return (
-      <TouchableOpacity
-        style={styles.suggestionItem}
-        onPress={() => handleSelect(item)}
-        activeOpacity={0.7}
-      >
-        <View style={styles.pinIcon}>
-          <Text style={styles.pinEmoji}>📍</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.mainText} numberOfLines={1}>
-            {highlightText(mainText, query)}
-          </Text>
-          {secondaryText ? (
-            <Text style={styles.secondaryText} numberOfLines={1}>
-              {secondaryText}
-            </Text>
-          ) : null}
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      enabled
-    >
-      <View style={[styles.container, containerStyle]}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <TextInput
-            style={[styles.input, inputStyle]}
-            value={query}
-            onChangeText={handleChangeText}
-            placeholder={placeholder}
-            placeholderTextColor="#9CA3AF"
-            autoCorrect={false}
-            autoComplete="off"
-            returnKeyType="search"
-          />
-          {loading && (
-            <ActivityIndicator
-              size="small"
-              color="#10B981"
-              style={styles.loader}
-            />
+    const highlightText = (text: string, highlight: string) => {
+      if (!highlight || !text) return <Text>{text}</Text>;
+      const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+      return (
+        <Text>
+          {parts.map((part, i) =>
+            part.toLowerCase() === highlight.toLowerCase() ? (
+              <Text key={i} style={styles.highlighted}>
+                {part}
+              </Text>
+            ) : (
+              <Text key={i}>{part}</Text>
+            )
           )}
-          {!loading && query.length > 0 && (
-            <TouchableOpacity onPress={handleClear} style={styles.clearBtn}>
-              <Text style={styles.clearIcon}>✕</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        </Text>
+      );
+    };
 
-        {showList && (
-          <View style={[styles.list, listStyle]}>
-            <FlatList
-              data={suggestions}
-              keyExtractor={(item) => item.place_id}
-              renderItem={renderItem}
-              keyboardShouldPersistTaps="handled"
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
+    const renderItem = ({ item }: { item: Prediction }) => {
+      const mainText = item.structured_formatting?.main_text || '';
+      const secondaryText = item.structured_formatting?.secondary_text || '';
+      return (
+        <TouchableOpacity
+          style={styles.suggestionItem}
+          onPress={() => handleSelect(item)}
+          activeOpacity={0.7}
+        >
+          <View style={styles.pinIcon}>
+            <Text style={styles.pinEmoji}>📍</Text>
           </View>
-        )}
-      </View>
-    </KeyboardAvoidingView>
-  );
-};
+          <View style={styles.textContainer}>
+            <Text style={styles.mainText} numberOfLines={1}>
+              {highlightText(mainText, query)}
+            </Text>
+            {secondaryText ? (
+              <Text style={styles.secondaryText} numberOfLines={1}>
+                {secondaryText}
+              </Text>
+            ) : null}
+          </View>
+        </TouchableOpacity>
+      );
+    };
+
+    return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        enabled
+      >
+        <View style={[styles.container, containerStyle]}>
+          <View style={styles.inputWrapper}>
+            <Text style={styles.searchIcon}>🔍</Text>
+            <TextInput
+              ref={ref as any}
+              style={[styles.input, inputStyle]}
+              value={query}
+              onChangeText={handleChangeText}
+              placeholder={placeholder}
+              placeholderTextColor="#9CA3AF"
+              autoCorrect={false}
+              autoComplete="off"
+              returnKeyType="search"
+              {...res}
+            />
+            {loading && (
+              <ActivityIndicator
+                size="small"
+                color="#10B981"
+                style={styles.loader}
+              />
+            )}
+            {!loading && query.length > 0 && (
+              <TouchableOpacity onPress={handleClear} style={styles.clearBtn}>
+                <Text style={styles.clearIcon}>✕</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {showList && (
+            <View style={[styles.list, listStyle]}>
+              <FlatList
+                data={suggestions}
+                keyExtractor={(item) => item.place_id}
+                renderItem={renderItem}
+                keyboardShouldPersistTaps="handled"
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+              />
+            </View>
+          )}
+        </View>
+      </KeyboardAvoidingView>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: { width: '100%', zIndex: 999 },
