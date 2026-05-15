@@ -28,6 +28,14 @@ export const PlacesAutocomplete = forwardRef<
       containerStyle,
       inputStyle,
       listStyle,
+      inputContainerStyle,
+      rightIcon,
+      leftIcon,
+      placeholderTextColor,
+      loadingColor,
+      highlightedStyle,
+      pinIconBackgroundColor,
+      pinIcon,
       ...res
     },
     ref
@@ -49,7 +57,7 @@ export const PlacesAutocomplete = forwardRef<
         <Text>
           {parts.map((part, i) =>
             part.toLowerCase() === highlight.toLowerCase() ? (
-              <Text key={i} style={styles.highlighted}>
+              <Text key={i} style={[styles.highlighted, highlightedStyle]}>
                 {part}
               </Text>
             ) : (
@@ -69,8 +77,14 @@ export const PlacesAutocomplete = forwardRef<
           onPress={() => handleSelect(item)}
           activeOpacity={0.7}
         >
-          <View style={styles.pinIcon}>
-            <Text style={styles.pinEmoji}>📍</Text>
+          <View
+            style={
+              pinIconBackgroundColor
+                ? [styles.pinIcon, { backgroundColor: pinIconBackgroundColor }]
+                : [styles.pinIcon, { backgroundColor: '#F0FDF4' }]
+            }
+          >
+            {pinIcon ? pinIcon : <Text style={styles.pinEmoji}>📍</Text>}
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.mainText} numberOfLines={1}>
@@ -92,15 +106,17 @@ export const PlacesAutocomplete = forwardRef<
         enabled
       >
         <View style={[styles.container, containerStyle]}>
-          <View style={styles.inputWrapper}>
-            <Text style={styles.searchIcon}>🔍</Text>
+          <View style={[styles.inputWrapper, inputContainerStyle]}>
+            {leftIcon ? leftIcon : <Text style={styles.searchIcon}>🔍</Text>}
             <TextInput
               ref={ref as any}
               style={[styles.input, inputStyle]}
               value={query}
               onChangeText={handleChangeText}
               placeholder={placeholder}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={
+                placeholderTextColor ? placeholderTextColor : '#9CA3AF'
+              }
               autoCorrect={false}
               autoComplete="off"
               returnKeyType="search"
@@ -109,14 +125,23 @@ export const PlacesAutocomplete = forwardRef<
             {loading && (
               <ActivityIndicator
                 size="small"
-                color="#10B981"
+                color={loadingColor ? loadingColor : '#10B981'}
                 style={styles.loader}
               />
             )}
             {!loading && query.length > 0 && (
-              <TouchableOpacity onPress={handleClear} style={styles.clearBtn}>
-                <Text style={styles.clearIcon}>✕</Text>
-              </TouchableOpacity>
+              <>
+                {rightIcon ? (
+                  rightIcon
+                ) : (
+                  <TouchableOpacity
+                    onPress={handleClear}
+                    style={styles.clearBtn}
+                  >
+                    <Text style={styles.clearIcon}>✕</Text>
+                  </TouchableOpacity>
+                )}
+              </>
             )}
           </View>
 
@@ -148,15 +173,6 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
     paddingHorizontal: 12,
     height: 52,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: { elevation: 3 },
-    }),
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   input: { flex: 1, fontSize: 15, color: '#111827', paddingVertical: 0 },
@@ -191,7 +207,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: '#F0FDF4',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

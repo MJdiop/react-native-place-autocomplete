@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type {
   StyleProp,
   TextInputProps,
@@ -108,6 +109,13 @@ export interface PlacesAutocompleteProps extends TextInputProps {
   minLength: number;
   debounce: number;
   containerStyle?: StyleProp<ViewStyle>;
+  highlightedStyle?: StyleProp<TextStyle>;
   inputStyle?: StyleProp<TextStyle>;
   listStyle?: StyleProp<ViewStyle>;
+  inputContainerStyle?: StyleProp<ViewStyle>;
+  rightIcon?: ReactNode;
+  leftIcon?: ReactNode;
+  pinIcon?: ReactNode;
+  loadingColor?: string;
+  pinIconBackgroundColor?: string;
 }
