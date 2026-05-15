@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-# PlacesAutocomplete Props Documentation (English)
+# Props Documentation
 
 ## Overview
 
